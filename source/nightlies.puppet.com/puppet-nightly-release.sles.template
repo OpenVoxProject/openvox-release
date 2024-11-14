@@ -1,6 +1,0 @@
-[puppet-nightly]
-name=Puppet Nightly Repository __OS_NAME__ __OS_VERSION__ - $basearch
-baseurl=http://nightlies.puppet.com/yum/puppet-nightly/__OS_NAME__/__OS_VERSION__/$basearch
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-2025-04-06-puppet-nightly-release
-enabled=1
-gpgcheck=1

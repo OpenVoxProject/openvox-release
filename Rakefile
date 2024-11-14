@@ -7,6 +7,21 @@ require 'packaging'
 
 Pkg::Util::RakeUtils.load_packaging_tasks
 
+namespace :overlookinfra do
+  desc 'Create community release repo packages'
+  task :build do
+    `docker run --rm -v #{__dir__}:/code almalinux:9 /bin/sh -c 'yum install -y ruby ruby-devel make gcc-c++ git jq rpm-build;cd /code;bundle install;bundle exec rake build'`
+  end
+
+  desc 'Upload repo packages'
+  task :upload do
+    debs = Dir.glob('puppet8-community-release/output/**/*.deb')
+    rpms = Dir.glob('puppet8-community-release/output/**/*.rpm')
+    debs.each { |f| `aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-apt/` }
+    rpms.each { |f| `aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-yum/` }
+  end
+end
+
 desc 'Create packages from release-file definitions'
 task :build do
   projects = Dir.glob('source/projects/*.json').map do |json_file_name|

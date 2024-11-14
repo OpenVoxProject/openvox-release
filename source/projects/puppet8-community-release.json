@@ -1,0 +1,35 @@
+{
+  "project": "puppet8-community-release",
+  "description": "Release packages for the community Puppet 8 repository",
+  "version": "1",
+  "release": "1",
+
+  "license": "ASL 2.0",
+  "vendor": "Overlook InfraTech <contact@overlookinfratech.com>",
+  "homepage": "https://overlookinfratech.com",
+  "target_repo": "puppet8",
+
+  "debs": [
+    "bionic",
+    "bookworm",
+    "bullseye",
+    "buster",
+    "focal",
+    "jammy",
+    "noble"
+  ],
+
+  "rpms": [
+    "el-7",
+    "el-8",
+    "el-9",
+    "fedora-36",
+    "fedora-40",
+    "amazon-2023",
+    "amazon-2"
+  ],
+
+  "sles": [
+    "sles-15"
+  ]
+}

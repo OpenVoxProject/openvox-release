@@ -1,0 +1,6 @@
+[puppet8-community]
+name=Community Puppet 8 Repository __OS_NAME__ __OS_VERSION__ - $basearch
+baseurl=https://s3.osuosl.org/puppet-yum/puppet8/__OS_NAME__/__OS_VERSION__/$basearch
+gpgkey=file:///etc/pki/rpm-gpg/GPG-KEY-overlook-puppet8-release
+enabled=1
+gpgcheck=1

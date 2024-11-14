@@ -27,10 +27,8 @@ function create_rpm {
   project_description=$(jq --raw-output .description "$project_json")
   project_url=$(jq --raw-output .homepage "$project_json")
 
-  package_file_name=$(printf '%s-%s-%s.%s%s.noarch.rpm' \
+  package_file_name=$(printf '%s-%s-%s.noarch.rpm' \
                              "$project_name" \
-                             "$project_version" \
-                             "$project_release" \
                              "$os_name" \
                              "$os_version")
 
@@ -72,10 +70,8 @@ function create_deb {
   project_description=$(jq --raw-output .description "$project_json")
   project_url=$(jq --raw-output .homepage "$project_json")
 
-  package_file_name=$(printf %s_%s-%s%s_all.deb \
+  package_file_name=$(printf %s-%s.deb \
                              "$project_name" \
-                             "$project_version" \
-                             "$project_release" \
                              "$os_name")
 
   conflicts=$(jq --raw-output '.conflicts[]?' "$project_json")
@@ -134,15 +130,15 @@ function fpm_log_format {
 # Install GPG key files, as appropriate, into the build directory.
 function install_deb_key_files {
   project_target_repo=$(jq --raw-output .target_repo "$project_json")
-  install -D "$source_directory/keyring.gpg" \
-      "$build_directory/etc/apt/keyrings/puppetlabs-keyring.gpg"
+  install -D "$source_directory/overlook-keyring.gpg" \
+      "$build_directory/etc/apt/keyrings/overlook-keyring.gpg"
 }
 
 function install_rpm_key_files {
   project_target_repo=$(jq --raw-output .target_repo "$project_json")
 
-  rpm_gpg_source_file=RPM-GPG-KEY-puppet-2025-04-06.pub
-  rpm_gpg_destination_file=RPM-GPG-KEY-2025-04-06-$project_target_repo-release
+  rpm_gpg_source_file=GPG-KEY-overlook.pub
+  rpm_gpg_destination_file=GPG-KEY-overlook-$project_target_repo-release
   rpm_gpg_source_path="$source_directory/$rpm_gpg_source_file"
   rpm_gpg_destination_path="$build_directory/etc/pki/rpm-gpg/$rpm_gpg_destination_file"
   install -D "$rpm_gpg_source_path" "$rpm_gpg_destination_path"
@@ -179,8 +175,8 @@ function install_deb_list_file {
 
 ## See RE-16301 & RE-16379
 function install_deb_pref_file {
-  pref_file_source="$source_directory/$template_source_directory/puppet-release.pref.template"
-  pref_file_build="$build_directory/etc/apt/preferences.d/puppet-release.pref"
+  pref_file_source="$source_directory/$template_source_directory/puppet-community-release.pref.template"
+  pref_file_build="$build_directory/etc/apt/preferences.d/puppet-community-release.pref"
 
   mkdir --parents "$(dirname "$pref_file_build")"
   cp "$pref_file_source" "$pref_file_build"
@@ -204,10 +200,10 @@ function create_build_directory {
     puppet*-release)
       case $package_type in
         rpm|sles)
-          template_source_directory=yum.puppet.com
+          template_source_directory=yum
           ;;
         deb)
-          template_source_directory=apt.puppet.com
+          template_source_directory=apt
           ;;
       esac
       ;;

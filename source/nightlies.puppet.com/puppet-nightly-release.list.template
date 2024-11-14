@@ -1,2 +1,0 @@
-# Puppet Nightly __CODENAME__ Repository
-deb [signed-by=/etc/apt/keyrings/puppetlabs-keyring.gpg] http://nightlies.puppet.com/apt __CODENAME__ puppet-nightly

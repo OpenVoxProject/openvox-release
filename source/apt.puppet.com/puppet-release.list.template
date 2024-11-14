@@ -1,2 +1,0 @@
-# Puppet __CODENAME__ Repository
-deb [signed-by=/etc/apt/keyrings/puppetlabs-keyring.gpg] http://apt.puppet.com __CODENAME__ puppet
