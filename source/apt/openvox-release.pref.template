@@ -1,0 +1,3 @@
+Package: openvox-agent
+Pin: release o=Vox*
+Pin-Priority: 1001

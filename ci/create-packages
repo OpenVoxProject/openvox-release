@@ -175,8 +175,8 @@ function install_deb_list_file {
 
 ## See RE-16301 & RE-16379
 function install_deb_pref_file {
-  pref_file_source="$source_directory/$template_source_directory/puppet-community-release.pref.template"
-  pref_file_build="$build_directory/etc/apt/preferences.d/puppet-community-release.pref"
+  pref_file_source="$source_directory/$template_source_directory/openvox-release.pref.template"
+  pref_file_build="$build_directory/etc/apt/preferences.d/openvox-release.pref"
 
   mkdir --parents "$(dirname "$pref_file_build")"
   cp "$pref_file_source" "$pref_file_build"
@@ -197,7 +197,7 @@ function create_build_directory {
     puppet*-nightly*)
       template_source_directory=nightlies.puppet.com
       ;;
-    puppet*-release)
+    puppet*-release|openvox*-release)
       case $package_type in
         rpm|sles)
           template_source_directory=yum

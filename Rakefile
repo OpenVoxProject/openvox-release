@@ -1,3 +1,31 @@
+require 'open3'
+
+def run_command(cmd)
+  Open3.popen2e(cmd) do |_stdin, stdout_stderr, wait_thr|
+    stdout_stderr.each_line { |line| puts line }
+    exit_status = wait_thr.value
+    unless exit_status.success?
+        abort "Command failed with exit status: #{exit_status.exitstatus}"
+    end
+  end
+end
+
+namespace :vox do
+  desc 'Create OpenVox release repo packages'
+  task :build do
+    run_command("docker run --rm -v #{__dir__}:/code almalinux:9 /bin/sh -c 'yum install -y ruby ruby-devel make gcc-c++ git jq rpm-build;cd /code;bundle install;bundle exec rake build'")
+  end
+
+  desc 'Upload repo packages'
+  task :upload do
+    debs = Dir.glob('openvox8-release/output/**/*.deb')
+    rpms = Dir.glob('openvox8-release/output/**/*.rpm')
+    debs.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-apt/") }
+    rpms.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-yum/") }
+  end
+end
+
+### Puppetlabs stuff ###
 # The 'packaging' gem requires these for configuration information.
 # See: https://github.com/puppetlabs/build-data
 ENV['TEAM'] = 'release'
@@ -6,21 +34,6 @@ ENV['PROJECT_ROOT'] = Dir.pwd
 require 'packaging'
 
 Pkg::Util::RakeUtils.load_packaging_tasks
-
-namespace :overlookinfra do
-  desc 'Create community release repo packages'
-  task :build do
-    `docker run --rm -v #{__dir__}:/code almalinux:9 /bin/sh -c 'yum install -y ruby ruby-devel make gcc-c++ git jq rpm-build;cd /code;bundle install;bundle exec rake build'`
-  end
-
-  desc 'Upload repo packages'
-  task :upload do
-    debs = Dir.glob('puppet8-community-release/output/**/*.deb')
-    rpms = Dir.glob('puppet8-community-release/output/**/*.rpm')
-    debs.each { |f| `aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-apt/` }
-    rpms.each { |f| `aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-yum/` }
-  end
-end
 
 desc 'Create packages from release-file definitions'
 task :build do
