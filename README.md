@@ -1,21 +1,13 @@
-# puppetlabs-release
+# openvox-release
 
-Uses fpm to build puppetlabs-release packages for all the platforms that we support.
+Uses fpm to build openvox-release packages for all the platforms that we support.
 
 See the [doc](./doc) directory for external documentation.
-
-## Continuous Integration
-
-Repo for yum and apt release packages with Puppet's signing key.
-
-Pull requests run here:
-
-https://jenkins-sre.delivery.puppetlabs.net/job/pipeline_puppetlabs-release_build
 
 ## Local builds
 
   - bundle install
-  - bundle exec rake build
+  - bundle exec rake vox:build
 
 `*.template` files for yum `.repo` and apt `.list` are merged with JSON configuration files from the `source` directory.
 

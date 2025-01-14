@@ -8,3 +8,5 @@ ext/packaging
 pkg/*
 ext/build_metadata*
 .ruby-version
+build
+openvox*-release
