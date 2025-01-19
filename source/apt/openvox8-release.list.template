@@ -1,2 +1,2 @@
 # OpenVox 8 __CODENAME__ Repository
-deb [signed-by=/etc/apt/keyrings/overlook-keyring.gpg] https://s3.osuosl.org/puppet-apt __CODENAME__ openvox8
+deb [signed-by=/etc/apt/keyrings/openvox-keyring.gpg] https://s3.osuosl.org/openvox-apt __CODENAME__ openvox8

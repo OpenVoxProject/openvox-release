@@ -20,8 +20,8 @@ namespace :vox do
   task :upload do
     debs = Dir.glob('openvox8-release/output/**/*.deb')
     rpms = Dir.glob('openvox8-release/output/**/*.rpm')
-    debs.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-apt/") }
-    rpms.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://puppet-yum/") }
+    debs.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-apt/") }
+    rpms.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-yum/") }
   end
 end
 
