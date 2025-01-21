@@ -1,6 +1,6 @@
 [openvox8]
 name=OpenVox 8 Repository __OS_NAME__ __OS_VERSION__ - $basearch
-baseurl=https://s3.osuosl.org/puppet-yum/openvox8/__OS_NAME__/__OS_VERSION__/$basearch
+baseurl=https://yum.overlookinfratech.com/openvox8/__OS_NAME__/__OS_VERSION__/$basearch
 gpgkey=file:///etc/pki/rpm-gpg/GPG-KEY-openvox-openvox8-release
 enabled=1
 gpgcheck=1
