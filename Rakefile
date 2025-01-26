@@ -13,6 +13,7 @@ end
 namespace :vox do
   desc 'Create OpenVox release repo packages'
   task :build do
+    FileUtils.rm_rf("#{__dir__}/openvox8-release")
     run_command("docker run --rm -v #{__dir__}:/code almalinux:9 /bin/sh -c 'yum install -y ruby ruby-devel make gcc-c++ git jq rpm-build;cd /code;bundle install;bundle exec rake build'")
   end
 

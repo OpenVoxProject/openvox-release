@@ -130,8 +130,8 @@ function fpm_log_format {
 # Install GPG key files, as appropriate, into the build directory.
 function install_deb_key_files {
   project_target_repo=$(jq --raw-output .target_repo "$project_json")
-  install -D "$source_directory/openvox-keyring.gpg" \
-      "$build_directory/etc/apt/keyrings/openvox-keyring.gpg"
+  keyring_destination_path="$build_directory/etc/apt/keyrings/openvox-keyring.gpg"
+  install -m 0644 -D "$source_directory/openvox-keyring.gpg" "$keyring_destination_path"
 }
 
 function install_rpm_key_files {
@@ -141,7 +141,7 @@ function install_rpm_key_files {
   rpm_gpg_destination_file=GPG-KEY-openvox-$project_target_repo-release
   rpm_gpg_source_path="$source_directory/$rpm_gpg_source_file"
   rpm_gpg_destination_path="$build_directory/etc/pki/rpm-gpg/$rpm_gpg_destination_file"
-  install -D "$rpm_gpg_source_path" "$rpm_gpg_destination_path"
+  install -m 0644 -D "$rpm_gpg_source_path" "$rpm_gpg_destination_path"
 }
 
 ##
