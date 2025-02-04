@@ -13,14 +13,16 @@ end
 namespace :vox do
   desc 'Create OpenVox release repo packages'
   task :build do
-    FileUtils.rm_rf("#{__dir__}/openvox8-release")
+    ['8', '7'].each { |version| FileUtils.rm_rf("#{__dir__}/openvox#{version}-release") }
     run_command("docker run --rm -v #{__dir__}:/code almalinux:9 /bin/sh -c 'yum install -y ruby ruby-devel make gcc-c++ git jq rpm-build;cd /code;bundle install;bundle exec rake build'")
   end
 
   desc 'Upload repo packages'
-  task :upload do
-    debs = Dir.glob('openvox8-release/output/**/*.deb')
-    rpms = Dir.glob('openvox8-release/output/**/*.rpm')
+  task :upload, [:version] do |_, args|
+    args.with_defaults(version: '8')
+    version = args[:version]
+    debs = Dir.glob("openvox#{version}-release/output/**/*.deb")
+    rpms = Dir.glob("openvox#{version}-release/output/**/*.rpm")
     debs.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-apt/") }
     rpms.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-yum/") }
   end
