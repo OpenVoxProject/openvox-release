@@ -1,4 +1,4 @@
-[openvox8]
+[openvox7]
 name=OpenVox 7 Repository __OS_NAME__ __OS_VERSION__ - $basearch
 baseurl=https://yum.overlookinfratech.com/openvox8/__OS_NAME__/__OS_VERSION__/$basearch
 gpgkey=file:///etc/pki/rpm-gpg/GPG-KEY-openvox-openvox7-release
