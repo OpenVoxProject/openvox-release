@@ -1,58 +1,34 @@
 require 'open3'
 
-def run_command(cmd)
-  Open3.popen2e(cmd) do |_stdin, stdout_stderr, wait_thr|
-    stdout_stderr.each_line { |line| puts line }
-    exit_status = wait_thr.value
-    unless exit_status.success?
-        abort "Command failed with exit status: #{exit_status.exitstatus}"
+RED = "\033[31m"
+GREEN = "\033[32m"
+RESET = "\033[0m"
+
+def run_command(cmd, silent: true, print_command: false, report_status: false)
+  puts "#{GREEN}Running #{cmd}#{RESET}" if print_command
+  output = ''
+  Open3.popen2e(cmd) do |_stdin, stdout_stderr, thread|
+    stdout_stderr.each do |line|
+      puts line unless silent
+      output += line
     end
+    exitcode = thread.value.exitstatus
+    unless exitcode.zero?
+      err = "#{RED}Command failed! Command: #{cmd}, Exit code: #{exitcode}"
+      # Print details if we were running silent
+      err += "\nOutput:\n#{output}" if silent
+      err += RESET
+      abort err
+    end
+    puts "#{GREEN}Command finished with status #{exitcode}#{RESET}" if report_status
   end
+  output.chomp
 end
 
-namespace :vox do
-  desc 'Create OpenVox release repo packages'
-  task :build do
-    ['8', '7'].each { |version| FileUtils.rm_rf("#{__dir__}/openvox#{version}-release") }
-    run_command("docker run --rm -v #{__dir__}:/code almalinux:9 /bin/sh -c 'yum install -y ruby ruby-devel make gcc-c++ git jq rpm-build;cd /code;bundle install;bundle exec rake build'")
-  end
-
-  desc 'Upload repo packages'
-  task :upload, [:version] do |_, args|
-    args.with_defaults(version: '8')
-    version = args[:version]
-    debs = Dir.glob("openvox#{version}-release/output/**/*.deb")
-    rpms = Dir.glob("openvox#{version}-release/output/**/*.rpm")
-    debs.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-apt/") }
-    rpms.each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-yum/") }
-  end
-
-  desc 'Upload .repo/.list files'
-  task :upload_repo_files do
-    abort 'No "build" directory found. Run the vox:build task first.' unless File.directory?('build')
-    FileUtils.rm_rf('yum_repo_files')
-    FileUtils.mkdir_p('yum_repo_files')
-    FileUtils.rm_rf('apt_repo_files')
-    FileUtils.mkdir_p('apt_repo_files')
-
-    Dir.chdir('build') do
-      Dir.glob('**/*.repo').each do |f|
-        os, osver, component, _, _, _ = f.split('/')
-        FileUtils.cp(f, "../yum_repo_files/#{component}-#{os}#{osver}.repo")
-      end
-
-      Dir.glob('**/*.list').each do |f|
-        os, component, _, _, _, _ = f.split('/')
-        FileUtils.cp(f, "../apt_repo_files/#{component}-#{os}.list")
-      end
-    end
-
-    Dir.glob('yum_repo_files/*.repo').each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-yum/repo_files/") }
-    Dir.glob('apt_repo_files/*.list').each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-apt/list_files/") }
-  end
-end
+Dir.glob(File.join('tasks/**/*.rake')).each { |file| load file }
 
 ### Puppetlabs stuff ###
+
 # The 'packaging' gem requires these for configuration information.
 # See: https://github.com/puppetlabs/build-data
 ENV['TEAM'] = 'release'
