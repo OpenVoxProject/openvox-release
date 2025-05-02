@@ -1,2 +1,2 @@
 # OpenVox 7 __CODENAME__ Repository
-deb [signed-by=/etc/apt/keyrings/openvox-keyring.gpg] https://apt.overlookinfratech.com __CODENAME__ openvox7
+deb [signed-by=/etc/apt/keyrings/openvox-keyring.gpg] https://apt.voxpupuli.org __CODENAME__ openvox7
