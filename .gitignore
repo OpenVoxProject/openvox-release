@@ -10,3 +10,5 @@ ext/build_metadata*
 .ruby-version
 build
 openvox*-release
+apt_repo_files/*
+yum_repo_files/*

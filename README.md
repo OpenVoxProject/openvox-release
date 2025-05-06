@@ -13,4 +13,4 @@ See the [doc](./doc) directory for external documentation.
 
 This results in an intermediate `build` directory of small trees for fpm to create appropriate `.rpm` and `.deb` files from.
 
-The fpm output files are left in the `output` directory per conventions set by the `packaging` gem.
+The fpm output files are left in the `output` directory.

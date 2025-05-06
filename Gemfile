@@ -12,4 +12,5 @@ end
 
 gem 'rake'
 gem 'fpm'
-gem 'packaging', *location_for(ENV['PACKAGING_LOCATION'] || '~> 0.99')
+gem 'ostruct'
+gem 'logger'

@@ -1,5 +1,5 @@
 ---
-project: 'puppetlabs-release'
+project: 'openvox-release'
 sign_tar: FALSE
 vanagon_project: TRUE
 build_tar: FALSE
