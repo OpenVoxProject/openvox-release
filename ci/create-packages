@@ -131,7 +131,7 @@ function fpm_log_format {
 function install_deb_key_files {
   project_target_repo=$(jq --raw-output .target_repo "$project_json")
   keyring_destination_path="$build_directory/etc/apt/keyrings/openvox-keyring.gpg"
-  install -m 0644 -D "$source_directory/openvox-keyring.gpg" "$keyring_destination_path"
+  cat "$source_directory/GPG-KEY-openvox.pub" | gpg --dearmor -o "$keyring_destination_path"
 }
 
 function install_rpm_key_files {
