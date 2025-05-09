@@ -1,37 +1,42 @@
-name: Build and upload repo packages and files
+---
+name: Build repo packages
 
 on:
-  workflow_dispatch:
-
-env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  # https://github.com/boto/boto3/issues/4398#issuecomment-2619946229
-  AWS_REQUEST_CHECKSUM_CALCULATION: "WHEN_REQUIRED"
-  AWS_RESPONSE_CHECKSUM_VALIDATION: "WHEN_REQUIRED"
+  pull_request: {}
+  push:
+    branches:
+      - main
 
 jobs:
-  build_and_upload:
+  build:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
           bundler-cache: true
 
-      - name: Update awscli
-        run: |
-          python -m pip install --upgrade awscli
-
       - name: Run build script
         run: bundle exec rake vox:build
 
-      - name: Upload packages
-        run: bundle exec rake vox:upload
+      - name: openvox8-release
+        uses: actions/upload-artifact@v4
+        with:
+          name: openvox8-release
+          path: openvox8-release/output/
+          retention-days: 7
+          overwrite: true
+          if-no-files-found: error
 
-      - name: Upload repo files
-        run: bundle exec rake vox:upload_repo_files
+      - name: openvox7-release
+        uses: actions/upload-artifact@v4
+        with:
+          name: openvox7-release
+          path: openvox7-release/output/
+          retention-days: 7
+          overwrite: true
+          if-no-files-found: error
