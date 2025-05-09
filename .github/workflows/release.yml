@@ -1,0 +1,38 @@
+---
+name: Build and upload repo packages and files
+
+on:
+  workflow_dispatch:
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  # https://github.com/boto/boto3/issues/4398#issuecomment-2619946229
+  AWS_REQUEST_CHECKSUM_CALCULATION: "WHEN_REQUIRED"
+  AWS_RESPONSE_CHECKSUM_VALIDATION: "WHEN_REQUIRED"
+
+jobs:
+  build_and_upload:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+
+      - name: Update awscli
+        run: |
+          python -m pip install --upgrade awscli
+
+      - name: Run build script
+        run: bundle exec rake vox:build
+
+      - name: Upload packages
+        run: bundle exec rake vox:upload
+
+      - name: Upload repo files
+        run: bundle exec rake vox:upload_repo_files
