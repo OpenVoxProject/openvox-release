@@ -17,7 +17,8 @@
     "ubuntu18.04",
     "ubuntu20.04",
     "ubuntu22.04",
-    "ubuntu24.04"
+    "ubuntu24.04",
+    "ubuntu25.04"
   ],
 
   "rpms": [
