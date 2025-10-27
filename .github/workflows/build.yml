@@ -24,7 +24,7 @@ jobs:
         run: bundle exec rake vox:build
 
       - name: openvox8-release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: openvox8-release
           path: openvox8-release/output/
@@ -33,7 +33,7 @@ jobs:
           if-no-files-found: error
 
       - name: openvox7-release
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: openvox7-release
           path: openvox7-release/output/
