@@ -31,7 +31,9 @@
     "fedora-42",
     "fedora-43",
     "amazon-2023",
-    "amazon-2"
+    "amazon-2",
+    "redhatfips-8",
+    "redhatfips-9"
   ],
 
   "sles": [
