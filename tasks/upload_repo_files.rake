@@ -19,7 +19,7 @@ namespace :vox do
       end
     end
 
-    Dir.glob('yum_repo_files/*.repo').each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-yum/repo_files/", silent: false) }
-    Dir.glob('apt_repo_files/*.list').each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-apt/list_files/", silent: false) }
+    Dir.glob('yum_repo_files/*.repo').each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-yum/repo_files/ --no-progress", silent: false) }
+    Dir.glob('apt_repo_files/*.list').each { |f| run_command("aws s3 --endpoint-url=https://s3.osuosl.org cp #{f} s3://openvox-apt/list_files/ --no-progress", silent: false) }
   end
 end
